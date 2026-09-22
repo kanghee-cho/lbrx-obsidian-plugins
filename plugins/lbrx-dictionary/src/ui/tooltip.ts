@@ -2,6 +2,14 @@ import type { DictionaryService } from "../api/dictionaryService";
 import { renderLookupResult } from "./renderEntries";
 
 const HIDE_DELAY_MS = 150;
+/**
+ * Delay before a hover actually triggers a lookup. Without this, briefly
+ * passing the mouse over a term (e.g. while scrolling or reading past it)
+ * fires a lookup instantly, which both wastes requests and can make the
+ * tooltip flash/close before the word the user actually wanted to check
+ * finishes loading. Requiring a short dwell time fixes both.
+ */
+const SHOW_DELAY_MS = 350;
 
 /**
  * Singleton floating tooltip used by both the live-preview editor extension
@@ -12,9 +20,27 @@ const HIDE_DELAY_MS = 150;
 export class DictionaryTooltip {
   private el: HTMLDivElement | undefined;
   private hideTimer: ReturnType<typeof setTimeout> | undefined;
+  private showTimer: ReturnType<typeof setTimeout> | undefined;
   private currentWord: string | undefined;
 
   constructor(private readonly service: DictionaryService) {}
+
+  /** Schedules `show()` after a short hover dwell time; call `cancelShow()` on mouseleave. */
+  scheduleShow(word: string, anchor: HTMLElement): void {
+    this.cancelHide();
+    this.cancelShow();
+    this.showTimer = setTimeout(() => {
+      this.showTimer = undefined;
+      this.show(word, anchor);
+    }, SHOW_DELAY_MS);
+  }
+
+  cancelShow(): void {
+    if (this.showTimer) {
+      clearTimeout(this.showTimer);
+      this.showTimer = undefined;
+    }
+  }
 
   show(word: string, anchor: HTMLElement): void {
     this.cancelHide();
@@ -67,6 +93,7 @@ export class DictionaryTooltip {
 
   destroy(): void {
     this.cancelHide();
+    this.cancelShow();
     this.el?.remove();
     this.el = undefined;
   }

@@ -32,22 +32,6 @@ function dedupeById<T extends { id: string }>(items: T[]): T[] {
 }
 
 /**
- * Applies the user-configured dictionary priority: returns the entries from
- * the first dictionary (in priority order) that has at least one match.
- * If none of the prioritized dictionaries matched, all found entries are
- * returned (no preference configured, or word only exists elsewhere).
- */
-function applyDictionaryPriority(entries: DictEntry[], priority: string[]): DictEntry[] {
-  for (const dictionaryId of priority) {
-    // `dictionary_id` may come back as a number if the underlying SQLite column
-    // is INTEGER, while settings values are always strings — compare as strings.
-    const matches = entries.filter((entry) => String(entry.dictionary_id) === dictionaryId);
-    if (matches.length > 0) return matches;
-  }
-  return entries;
-}
-
-/**
  * Looks up a word against the PocketBase `dict_entries` / `dict_inflections`
  * views:
  *   1. Direct match on `dict_entries.headword_normalized`.
@@ -55,9 +39,10 @@ function applyDictionaryPriority(entries: DictEntry[], priority: string[]): Dict
  *      resolves it to one or more `headword_normalized` lemmas, which are then
  *      looked up in `dict_entries` too.
  * All matching entries (across every dictionary) are cached in-memory (TTL
- * configurable); `settings.dictionaryPriority` is applied fresh on every call
- * on top of the cached data, so changing the priority order takes effect
- * immediately without waiting for the cache to expire.
+ * configurable) and returned as-is; `settings.dictionaryPriority` is read
+ * fresh on every call and attached to the result so the render layer can
+ * group entries into per-dictionary tabs ordered by priority, without
+ * waiting for the cache to expire when the priority order changes.
  */
 export class DictionaryService {
   private readonly cache = new Map<string, CachedLookup>();
@@ -77,9 +62,10 @@ export class DictionaryService {
 
     return {
       query: word,
-      entries: applyDictionaryPriority(cachedLookup.allEntries, settings.dictionaryPriority),
+      entries: cachedLookup.allEntries,
       inflections: cachedLookup.inflections,
       fetchedAt: cachedLookup.fetchedAt,
+      priority: settings.dictionaryPriority,
     };
   }
 

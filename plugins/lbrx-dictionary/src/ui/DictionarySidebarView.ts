@@ -37,7 +37,7 @@ export class DictionarySidebarView extends ItemView {
     });
     this.resultsEl = container.createDiv({ cls: "lbrx-dictionary-results" });
 
-    const runSearch = debounce((value: string) => {
+    const doSearch = (value: string) => {
       const trimmed = value.trim();
       this.resultsEl.empty();
       if (!trimmed) return;
@@ -53,9 +53,17 @@ export class DictionarySidebarView extends ItemView {
             cls: "lbrx-dictionary-error",
           });
         });
-    }, 300);
+    };
 
-    input.addEventListener("input", () => runSearch(input.value));
+    // A longer debounce (rather than searching on every keystroke) avoids
+    // firing lookups for incomplete words while still typing; Enter bypasses
+    // it entirely for an immediate search of whatever's currently typed.
+    const debouncedSearch = debounce(doSearch, 500);
+
+    input.addEventListener("input", () => debouncedSearch(input.value));
+    input.addEventListener("keydown", (evt) => {
+      if (evt.key === "Enter") doSearch(input.value);
+    });
   }
 
   async onClose(): Promise<void> {

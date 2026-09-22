@@ -39,8 +39,11 @@ export function registerDictionaryPostProcessor(
         const span = document.createElement("span");
         span.className = "lbrx-dictionary-term";
         span.textContent = word;
-        span.addEventListener("mouseenter", () => tooltip.show(word, span));
-        span.addEventListener("mouseleave", () => tooltip.scheduleHide());
+        span.addEventListener("mouseenter", () => tooltip.scheduleShow(word, span));
+        span.addEventListener("mouseleave", () => {
+          tooltip.cancelShow();
+          tooltip.scheduleHide();
+        });
         frag.appendChild(span);
         lastIndex = match.index + match[0].length;
       }

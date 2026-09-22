@@ -37,9 +37,12 @@ export interface DictInflection {
 /** 한 단어 조회 결과. */
 export interface DictionaryLookupResult {
   query: string;
+  /** 우선순위 필터링 없이, 매칭된 모든 사전의 엔트리 (렌더링 단계에서 탭으로 분리됨). */
   entries: DictEntry[];
   inflections: DictInflection[];
   fetchedAt: number;
+  /** 조회 시점의 `dictionaryPriority` 설정값 (탭 정렬 및 기본 탭 선택에 사용). */
+  priority: string[];
 }
 
 /** PocketBase 인증 응답 (auth-with-password). */

@@ -31,8 +31,11 @@ class TermWidget extends WidgetType {
     const span = document.createElement("span");
     span.className = "lbrx-dictionary-term";
     span.textContent = this.word;
-    span.addEventListener("mouseenter", () => this.tooltip.show(this.word, span));
-    span.addEventListener("mouseleave", () => this.tooltip.scheduleHide());
+    span.addEventListener("mouseenter", () => this.tooltip.scheduleShow(this.word, span));
+    span.addEventListener("mouseleave", () => {
+      this.tooltip.cancelShow();
+      this.tooltip.scheduleHide();
+    });
     return span;
   }
 }
