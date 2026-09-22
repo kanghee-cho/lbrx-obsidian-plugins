@@ -21,19 +21,24 @@
 	margin: 0 0 6px 0;
 }
 
+/* --- 탭 바: lbrx_dictionary 웹앱(app/frontend/style.css)의 .dict-tabs/.dict-tab을
+   그대로 참고한 pill 스타일. 탭에 사전 이름이 들어가므로 본문에는 사전 이름을
+   중복 표시하지 않는다. --- */
 .lbrx-dictionary-tabs {
 	display: flex;
 	flex-wrap: wrap;
 	gap: 4px;
-	margin-bottom: 6px;
+	border-bottom: 1px solid var(--background-modifier-border);
+	margin-bottom: 8px;
+	padding-bottom: 4px;
 }
 
 .lbrx-dictionary-tab {
-	padding: 2px 8px;
-	font-size: var(--font-ui-smaller);
-	background: var(--background-secondary);
+	font-size: 0.8em;
+	padding: 4px 10px;
 	border: 1px solid var(--background-modifier-border);
-	border-radius: var(--radius-s);
+	border-radius: 12px;
+	background: var(--background-secondary);
 	color: var(--text-muted);
 	cursor: pointer;
 }
@@ -43,9 +48,50 @@
 }
 
 .lbrx-dictionary-tab.is-active {
-	background: var(--interactive-accent);
-	color: var(--text-on-accent);
-	border-color: var(--interactive-accent);
+	background: #333;
+	color: #fff;
+	border-color: #333;
+}
+
+/* 마커별 활성 탭 강조색 (Longman/Oxford/간이영한/AHD/Macmillan/Collins/영한/Donga) */
+.lbrx-dictionary-tab[data-marker="L"].is-active {
+	background: #2f6fed;
+	border-color: #2f6fed;
+}
+
+.lbrx-dictionary-tab[data-marker="O"].is-active {
+	background: #002147;
+	border-color: #002147;
+}
+
+.lbrx-dictionary-tab[data-marker="Q"].is-active {
+	background: #888;
+	border-color: #888;
+}
+
+.lbrx-dictionary-tab[data-marker="A"].is-active {
+	background: #8b1a1a;
+	border-color: #8b1a1a;
+}
+
+.lbrx-dictionary-tab[data-marker="M"].is-active {
+	background: #cc5500;
+	border-color: #cc5500;
+}
+
+.lbrx-dictionary-tab[data-marker="C"].is-active {
+	background: #0f6b3f;
+	border-color: #0f6b3f;
+}
+
+.lbrx-dictionary-tab[data-marker="K"].is-active {
+	background: #e07a1f;
+	border-color: #e07a1f;
+}
+
+.lbrx-dictionary-tab[data-marker="D"].is-active {
+	background: #3ba7db;
+	border-color: #3ba7db;
 }
 
 .lbrx-dictionary-entry {
@@ -73,9 +119,163 @@
 	color: var(--text-muted);
 }
 
+/* --- 사전 본문(definition_html): lbrx_dictionary 웹앱의 .dict-entry-body를 참고.
+   DB의 definition_html은 <p> 없이 <br>로만 문단을 구분하므로, <br>을 문단 구분처럼
+   보이도록 블록 요소화하고 위 여백을 준다. --- */
 .lbrx-dictionary-definition {
 	margin-top: 4px;
-	font-size: var(--font-ui-small);
+	font-size: 0.9em;
+}
+
+.lbrx-dictionary-definition br {
+	content: "";
+	display: block;
+	margin-top: 10px;
+}
+
+/* 마커별 전용 스타일: 공통 레이아웃은 위에서 이미 정의했으므로, 여기서는 그
+   마커만의 강조(테두리 색, 배경색 등)만 추가한다. */
+
+/* Longman(LDOCE, marker="L") */
+.lbrx-dictionary-definition[data-marker="L"] {
+	border-left: 3px solid #2f6fed;
+	padding-left: 10px;
+	background: #f5f8ff;
+}
+
+.lbrx-dictionary-definition[data-marker="L"] .l-sense-num {
+	color: #2f6fed;
+	font-size: 1.05em;
+}
+
+.lbrx-dictionary-definition[data-marker="L"] font[color="#ff0000"] {
+	display: inline-block;
+	font-style: normal;
+	font-size: 0.72em;
+	font-weight: bold;
+	color: #fff;
+	background: #e0752f;
+	padding: 1px 5px;
+	border-radius: 3px;
+	margin: 0 2px;
+}
+
+.lbrx-dictionary-definition[data-marker="L"] font[color="#00008b"] {
+	display: inline-block;
+	font-size: 0.75em;
+	font-weight: bold;
+	color: #fff;
+	background: #2f6fed;
+	padding: 1px 5px;
+	border-radius: 3px;
+	margin: 0 2px;
+}
+
+.lbrx-dictionary-definition[data-marker="L"] .l-fold {
+	margin-top: 10px;
+}
+
+.lbrx-dictionary-definition[data-marker="L"] .l-fold summary {
+	cursor: pointer;
+	font-weight: bold;
+	font-size: 0.9em;
+	color: #2f6fed;
+}
+
+/* Oxford(OALD, marker="O") — Oxford Blue 톤 */
+.lbrx-dictionary-definition[data-marker="O"] {
+	border-left: 3px solid #002147;
+	padding-left: 10px;
+	background: #eef1f5;
+}
+
+.lbrx-dictionary-definition[data-marker="O"] .o-sense-num {
+	color: #002147;
+	font-size: 1.05em;
+}
+
+.lbrx-dictionary-definition[data-marker="O"] .o-fold {
+	margin-top: 10px;
+}
+
+.lbrx-dictionary-definition[data-marker="O"] .o-fold summary {
+	cursor: pointer;
+	font-weight: bold;
+	font-size: 0.9em;
+	color: #002147;
+}
+
+.lbrx-dictionary-definition[data-marker="O"] font[color="#836b23"] {
+	display: inline-block;
+	font-style: normal;
+	font-size: 0.72em;
+	font-weight: bold;
+	color: #fff;
+	background: #7a6a3f;
+	padding: 1px 5px;
+	border-radius: 3px;
+	margin: 0 2px;
+}
+
+/* 간략영한사전(marker="Q") — 회색 톤 */
+.lbrx-dictionary-definition[data-marker="Q"] {
+	border-left: 3px solid #888;
+	padding-left: 10px;
+	background: #f2f2f2;
+}
+
+/* American Heritage(AHD, marker="A") — 브릭 레드 톤 */
+.lbrx-dictionary-definition[data-marker="A"] {
+	border-left: 3px solid #8b1a1a;
+	padding-left: 10px;
+	background: #fbf1f1;
+}
+
+.lbrx-dictionary-definition[data-marker="A"] .a-sense-num {
+	color: #8b1a1a;
+	font-size: 1.05em;
+}
+
+/* Macmillan(MED, marker="M") — 오렌지 계열 */
+.lbrx-dictionary-definition[data-marker="M"] {
+	border-left: 3px solid #cc5500;
+	padding-left: 10px;
+	background: #fdf3ea;
+}
+
+.lbrx-dictionary-definition[data-marker="M"] .m-sense-num {
+	color: #cc5500;
+	font-size: 1.05em;
+}
+
+/* Collins Cobuild(marker="C") — 콜린스 그린 톤 */
+.lbrx-dictionary-definition[data-marker="C"] {
+	border-left: 3px solid #0f6b3f;
+	padding-left: 10px;
+	background: #eef6f1;
+}
+
+.lbrx-dictionary-definition[data-marker="C"] .c-sense-num {
+	color: #0f6b3f;
+	font-size: 1.05em;
+}
+
+/* 영한사전(marker="K") — 오렌지 톤 */
+.lbrx-dictionary-definition[data-marker="K"] {
+	border-left: 3px solid #e07a1f;
+	padding-left: 10px;
+	background: #fdf2e6;
+}
+
+.lbrx-dictionary-definition[data-marker="K"] .k-sense-num {
+	font-size: 1.05em;
+}
+
+/* Donga(marker="D") — 하늘색 톤 */
+.lbrx-dictionary-definition[data-marker="D"] {
+	border-left: 3px solid #3ba7db;
+	padding-left: 10px;
+	background: #eef7fc;
 }
 
 .lbrx-dictionary-loading,
