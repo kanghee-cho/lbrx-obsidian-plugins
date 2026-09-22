@@ -1,0 +1,10 @@
+{
+  "id": "lbrx-sample-plugin",
+  "name": "LBRX Sample Plugin",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Sample/template plugin demonstrating the LBRX monorepo structure and shared packages.",
+  "author": "Kanghee (Joe) Cho",
+  "authorUrl": "https://github.com/kanghee-cho",
+  "isDesktopOnly": false
+}

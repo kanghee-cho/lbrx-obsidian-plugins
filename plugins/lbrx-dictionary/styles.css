@@ -1,0 +1,78 @@
+.lbrx-dictionary-term {
+	border-bottom: 1px dotted var(--text-accent);
+	color: var(--text-accent);
+	cursor: help;
+}
+
+.lbrx-dictionary-tooltip {
+	z-index: var(--layer-tooltip);
+	max-width: 360px;
+	max-height: 320px;
+	overflow-y: auto;
+	padding: 10px 12px;
+	background: var(--background-primary);
+	border: 1px solid var(--background-modifier-border);
+	border-radius: var(--radius-m);
+	box-shadow: var(--shadow-s);
+	display: none;
+}
+
+.lbrx-dictionary-query {
+	margin: 0 0 6px 0;
+}
+
+.lbrx-dictionary-entry {
+	padding: 6px 0;
+	border-top: 1px solid var(--background-modifier-border);
+}
+
+.lbrx-dictionary-entry:first-of-type {
+	border-top: none;
+}
+
+.lbrx-dictionary-entry-header {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.lbrx-dictionary-headword {
+	font-weight: 700;
+}
+
+.lbrx-dictionary-source {
+	font-size: var(--font-ui-smaller);
+	color: var(--text-muted);
+}
+
+.lbrx-dictionary-definition {
+	margin-top: 4px;
+	font-size: var(--font-ui-small);
+}
+
+.lbrx-dictionary-loading,
+.lbrx-dictionary-empty,
+.lbrx-dictionary-error {
+	color: var(--text-muted);
+	font-size: var(--font-ui-small);
+}
+
+.lbrx-dictionary-error {
+	color: var(--text-error);
+}
+
+.lbrx-dictionary-sidebar {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 8px;
+}
+
+.lbrx-dictionary-search-input {
+	width: 100%;
+}
+
+.lbrx-dictionary-results {
+	overflow-y: auto;
+}
