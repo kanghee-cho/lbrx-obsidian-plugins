@@ -1,4 +1,5 @@
 import type { DictEntry, DictionaryLookupResult } from "../types";
+import { fixLowContrastText } from "./contrastFix";
 
 interface DictionaryGroup {
   dictionaryId: string;
@@ -121,6 +122,9 @@ function renderEntry(container: HTMLElement, entry: DictEntry, opts: { showSourc
   if (entry.definition_html) {
     // Trusted internal PocketBase content (own dictionary data), rendered as-is.
     definitionEl.innerHTML = entry.definition_html;
+    // The source HTML's own inline colors may not have enough contrast
+    // against our marker-tinted background (especially in dark mode).
+    fixLowContrastText(definitionEl);
   } else {
     definitionEl.setText(entry.definition_text ?? "");
   }
