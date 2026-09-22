@@ -125,6 +125,11 @@
 .lbrx-dictionary-definition {
 	margin-top: 4px;
 	font-size: 0.9em;
+	/* Definitions come as raw HTML with no inline color, so they'd otherwise
+	   inherit whatever ambient color a marker box's background was designed
+	   against; pin it to the theme's normal text color for readability in
+	   both light and dark themes. */
+	color: var(--text-normal);
 }
 
 .lbrx-dictionary-definition br {
@@ -140,7 +145,7 @@
 .lbrx-dictionary-definition[data-marker="L"] {
 	border-left: 3px solid #2f6fed;
 	padding-left: 10px;
-	background: #f5f8ff;
+	background: color-mix(in srgb, var(--background-primary) 88%, #2f6fed 12%);
 }
 
 .lbrx-dictionary-definition[data-marker="L"] .l-sense-num {
@@ -186,7 +191,7 @@
 .lbrx-dictionary-definition[data-marker="O"] {
 	border-left: 3px solid #002147;
 	padding-left: 10px;
-	background: #eef1f5;
+	background: color-mix(in srgb, var(--background-primary) 88%, #002147 12%);
 }
 
 .lbrx-dictionary-definition[data-marker="O"] .o-sense-num {
@@ -221,14 +226,14 @@
 .lbrx-dictionary-definition[data-marker="Q"] {
 	border-left: 3px solid #888;
 	padding-left: 10px;
-	background: #f2f2f2;
+	background: color-mix(in srgb, var(--background-primary) 88%, #888 12%);
 }
 
 /* American Heritage(AHD, marker="A") — 브릭 레드 톤 */
 .lbrx-dictionary-definition[data-marker="A"] {
 	border-left: 3px solid #8b1a1a;
 	padding-left: 10px;
-	background: #fbf1f1;
+	background: color-mix(in srgb, var(--background-primary) 88%, #8b1a1a 12%);
 }
 
 .lbrx-dictionary-definition[data-marker="A"] .a-sense-num {
@@ -240,7 +245,7 @@
 .lbrx-dictionary-definition[data-marker="M"] {
 	border-left: 3px solid #cc5500;
 	padding-left: 10px;
-	background: #fdf3ea;
+	background: color-mix(in srgb, var(--background-primary) 88%, #cc5500 12%);
 }
 
 .lbrx-dictionary-definition[data-marker="M"] .m-sense-num {
@@ -252,7 +257,7 @@
 .lbrx-dictionary-definition[data-marker="C"] {
 	border-left: 3px solid #0f6b3f;
 	padding-left: 10px;
-	background: #eef6f1;
+	background: color-mix(in srgb, var(--background-primary) 88%, #0f6b3f 12%);
 }
 
 .lbrx-dictionary-definition[data-marker="C"] .c-sense-num {
@@ -264,7 +269,7 @@
 .lbrx-dictionary-definition[data-marker="K"] {
 	border-left: 3px solid #e07a1f;
 	padding-left: 10px;
-	background: #fdf2e6;
+	background: color-mix(in srgb, var(--background-primary) 88%, #e07a1f 12%);
 }
 
 .lbrx-dictionary-definition[data-marker="K"] .k-sense-num {
@@ -275,7 +280,7 @@
 .lbrx-dictionary-definition[data-marker="D"] {
 	border-left: 3px solid #3ba7db;
 	padding-left: 10px;
-	background: #eef7fc;
+	background: color-mix(in srgb, var(--background-primary) 88%, #3ba7db 12%);
 }
 
 .lbrx-dictionary-loading,
@@ -302,4 +307,23 @@
 
 .lbrx-dictionary-results {
 	overflow-y: auto;
+}
+
+/* 다크 테마에서는 원래 아주 어두운 강조색(Oxford 네이비/AHD 브릭레드)이 어두운
+   배경 위에서 거의 안 보이므로, 같은 색조를 유지하되 밝힌 버전으로 대체한다. */
+body.theme-dark .lbrx-dictionary-definition[data-marker="O"] {
+	border-left-color: #6ea8e6;
+}
+
+body.theme-dark .lbrx-dictionary-definition[data-marker="O"] .o-sense-num,
+body.theme-dark .lbrx-dictionary-definition[data-marker="O"] .o-fold summary {
+	color: #6ea8e6;
+}
+
+body.theme-dark .lbrx-dictionary-definition[data-marker="A"] {
+	border-left-color: #e08585;
+}
+
+body.theme-dark .lbrx-dictionary-definition[data-marker="A"] .a-sense-num {
+	color: #e08585;
 }
