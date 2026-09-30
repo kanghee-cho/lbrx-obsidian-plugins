@@ -1,5 +1,5 @@
 import { Notice, Plugin } from "obsidian";
-import { mergeSettings } from "@lbrx/shared-core";
+import { debounce, mergeSettings } from "@lbrx/shared-core";
 import { DEFAULT_SETTINGS, LbrxDictionarySettings } from "./settings";
 import { PocketBaseClient } from "./api/pocketbaseClient";
 import { DictionaryService } from "./api/dictionaryService";
@@ -26,10 +26,20 @@ export default class LbrxDictionaryPlugin extends Plugin {
     this.registerView(DICTIONARY_VIEW_TYPE, (leaf) => new DictionarySidebarView(leaf, this.dictionaryService));
     this.addRibbonIcon("book-open", "LBRX Dictionary 검색", () => this.activateSidebar());
 
+    // Debounced: Live Preview rebuilds decorations on every keystroke/scroll,
+    // so this batches those bursts into one prefetch call instead of firing
+    // a request per rebuild.
+    const debouncedPrefetch = debounce(
+      (words: string[]) => void this.dictionaryService.prefetchWords(words),
+      300,
+    );
     // Live Preview (editing) support.
-    this.registerEditorExtension(createDictionaryTermExtension(() => this.settings, this.tooltip));
-    // Reading view support.
-    registerDictionaryPostProcessor(this, () => this.settings, this.tooltip);
+    this.registerEditorExtension(createDictionaryTermExtension(() => this.settings, this.tooltip, debouncedPrefetch));
+    // Reading view support. Rendering only happens once per note open (not
+    // per keystroke), so no debounce needed here.
+    registerDictionaryPostProcessor(this, () => this.settings, this.tooltip, (words) =>
+      void this.dictionaryService.prefetchWords(words),
+    );
 
     this.addCommand({
       id: "lbrx-dictionary-lookup-selection",

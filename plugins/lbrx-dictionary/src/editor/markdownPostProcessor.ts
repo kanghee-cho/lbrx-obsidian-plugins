@@ -12,6 +12,8 @@ export function registerDictionaryPostProcessor(
   plugin: Plugin,
   getSettings: () => LbrxDictionarySettings,
   tooltip: DictionaryTooltip,
+  /** Called once per rendered block with every distinct term word found in it, so they can all be looked up in one batched request ahead of hover. */
+  prefetch: (words: string[]) => void,
 ): void {
   plugin.registerMarkdownPostProcessor((el) => {
     const regex = buildTermRegex(getSettings().termDelimiter);
@@ -21,6 +23,8 @@ export function registerDictionaryPostProcessor(
     while ((node = walker.nextNode())) {
       textNodes.push(node as Text);
     }
+
+    const words = new Set<string>();
 
     for (const textNode of textNodes) {
       const text = textNode.textContent ?? "";
@@ -36,6 +40,7 @@ export function registerDictionaryPostProcessor(
           frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
         }
         const word = match[1];
+        words.add(word);
         const span = document.createElement("span");
         span.className = "lbrx-dictionary-term";
         span.textContent = word;
@@ -52,5 +57,7 @@ export function registerDictionaryPostProcessor(
       }
       textNode.replaceWith(frag);
     }
+
+    if (words.size > 0) prefetch([...words]);
   });
 }

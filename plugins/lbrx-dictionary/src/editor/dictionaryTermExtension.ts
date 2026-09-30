@@ -48,6 +48,13 @@ class TermWidget extends WidgetType {
 export function createDictionaryTermExtension(
   getSettings: () => LbrxDictionarySettings,
   tooltip: DictionaryTooltip,
+  /**
+   * Called with every distinct term word currently visible whenever the
+   * viewport/doc changes, so the whole visible batch can be looked up in
+   * one or two requests ahead of time instead of one request per hover.
+   * Callers should debounce this themselves (it fires on every keystroke).
+   */
+  prefetch: (words: string[]) => void,
 ) {
   return ViewPlugin.fromClass(
     class {
@@ -66,6 +73,7 @@ export function createDictionaryTermExtension(
       build(view: EditorView): DecorationSet {
         const builder = new RangeSetBuilder<Decoration>();
         const regex = buildTermRegex(getSettings().termDelimiter);
+        const words = new Set<string>();
 
         for (const { from, to } of view.visibleRanges) {
           const text = view.state.sliceDoc(from, to);
@@ -75,8 +83,10 @@ export function createDictionaryTermExtension(
             const start = from + match.index;
             const end = start + match[0].length;
             builder.add(start, end, Decoration.replace({ widget: new TermWidget(match[1], tooltip) }));
+            words.add(match[1]);
           }
         }
+        if (words.size > 0) prefetch([...words]);
         return builder.finish();
       }
     },
